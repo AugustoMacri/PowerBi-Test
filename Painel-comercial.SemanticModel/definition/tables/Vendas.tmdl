@@ -1,0 +1,32 @@
+table Vendas
+	lineageTag: f5a1001c-2786-4cbb-a6bd-e84075b19af3
+
+	column id
+		dataType: int64
+		formatString: 0
+		lineageTag: a013f57c-51f2-4f73-8d6e-726b0d8d5275
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valor
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bf4b49c-cc81-439d-8fa9-adc73294d86f
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Vendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMlTSUTI0MFCK1YlWMgKyjaFsYyDbFMo2AbItoWxTINsCxI4FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [id = _t, Valor = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"id", Int64.Type}, {"Valor", Int64.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+
